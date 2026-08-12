@@ -1,13 +1,11 @@
 import { initializeApp, cert, getApps } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import fs from "fs";
 
-const serviceAccount = {
-  projectId: process.env.FIREBASE_PROJECT_ID,
-  clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-  privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n"),
-};
+const serviceAccount = JSON.parse(
+  fs.readFileSync("/etc/secrets/firebase-service-account.json", "utf8")
+);
 
-// Evita inicializar varias veces
 if (!getApps().length) {
   initializeApp({
     credential: cert(serviceAccount),
